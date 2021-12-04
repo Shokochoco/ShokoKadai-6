@@ -31,22 +31,22 @@ class ViewController: UIViewController {
     }
 
     @IBAction private func judgeButtonTapped(_ sender: Any) {
-        let sliderValue = Int(slider.value)
-        let sliderNumString = String(sliderValue)
-        if numberLabel.text == sliderNumString {
-            actionAlert(message: "あたり！", selectedNum: sliderNumString)
+        let sliderNum = Int(slider.value)
+        let sliderValue = String(sliderNum)
+        if numberLabel.text == sliderValue {
+            actionAlert(message: "あたり！", selectedNum: sliderValue)
         } else {
-            actionAlert(message: "はずれ！", selectedNum: sliderNumString)
+            actionAlert(message: "はずれ！", selectedNum: sliderValue)
         }
     }
 
-    func createRandomNumber() {
+    private func createRandomNumber() {
         let randomNum = Int.random(in: 1...100)
         numberLabel.text = String(randomNum)
     }
 
-    func actionAlert(message: String, selectedNum: String) {
-        let alert = UIAlertController(title: "結果", message: "\(message)　　　　　　　　　　　　　　　　　　　　　　　　　あなたの値：\(selectedNum)", preferredStyle: .alert)
+    private func actionAlert(message: String, selectedNum: String) {
+        let alert = UIAlertController(title: "結果", message: "\(message)　　　　　　　　　　　　　　　　　　　　　　　　　あなたの値：\(selectedNum)", preferredStyle: .alert) // 2行に改行できませんでした
         alert.addAction(UIAlertAction(title: "再挑戦", style: .default, handler: { _ in
             self.createRandomNumber()
         }))

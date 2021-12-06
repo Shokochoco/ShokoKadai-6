@@ -7,23 +7,16 @@
 
 import UIKit
 
-enum AlertMessage: String {
-    case correct
-    case incorrect
-
-    var message: String {
-        switch self {
-        case .correct:
-            return "あたり！"
-        case .incorrect:
-            return "はずれ！"
-        }
-    }
+private enum AlertMessage {
+    static let correct = "あたり！"
+    static let incorrect = "はずれ！"
 }
 
 final class ViewController: UIViewController {
     @IBOutlet private weak var numberLabel: UILabel!
     @IBOutlet private weak var slider: UISlider!
+
+    private var answer = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,24 +24,26 @@ final class ViewController: UIViewController {
     }
 
     @IBAction private func judgeButtonTapped(_ sender: Any) {
-        let sliderNum = Int(slider.value)
-        let sliderValue = String(sliderNum)
-        if numberLabel.text == sliderValue {
-            actionAlert(message: AlertMessage.correct.message, selectedNum: sliderValue)
+        if answer == Int(slider.value) {
+            actionAlert(message: AlertMessage.correct)
         } else {
-            actionAlert(message: AlertMessage.incorrect.message, selectedNum: sliderValue)
+            actionAlert(message: AlertMessage.incorrect)
         }
     }
 
     private func createRandomNumber() {
-        let randomNum = Int.random(in: 1...100)
-        numberLabel.text = String(randomNum)
+        answer = Int.random(in: 1...100)
+        numberLabel.text = String(answer)
     }
 
-    private func actionAlert(message: String, selectedNum: String) {
-        let alert = UIAlertController(title: "結果", message: "\(message)\nあなたの値：\(selectedNum)", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "再挑戦", style: .default, handler: { _ in
-            self.createRandomNumber()
+    private func actionAlert(message: String) {
+        let alert = UIAlertController(
+            title: "結果",
+            message: "\(message)\nあなたの値：\(Int(slider.value))",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "再挑戦", style: .default, handler: { [weak self] _ in
+            self?.createRandomNumber()
         }))
         present(alert, animated: true, completion: nil)
     }
